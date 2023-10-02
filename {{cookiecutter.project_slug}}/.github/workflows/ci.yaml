@@ -1,0 +1,69 @@
+{% raw %}name: Python Checks
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: 1
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4.5.0
+        with:
+          python-version: 3.9
+      - name: Cache dependencies
+        uses: actions/cache@v3.2.4
+        id: cache
+        with:
+          path: ${{ env.pythonLocation }}
+          key: ${{ env.pythonLocation }}-${{ hashFiles('tests/requirements-dev.txt') }}-lint
+      - name: Install Ruff
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: grep -E 'ruff==' tests/requirements-dev.txt | xargs pip install
+      - name: Lint
+        run: |
+          echo "::add-matcher::.github/workflows/lint_matcher.json"
+          ruff --config tests/ruff.toml .
+  autoformat:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4.5.0
+        with:
+          python-version: 3.9
+      - name: Cache dependencies
+        uses: actions/cache@v3.2.4
+        id: cache
+        with:
+          path: ${{ env.pythonLocation }}
+          key: ${{ env.pythonLocation }}-${{ hashFiles('tests/requirements-dev.txt') }}-autoformat
+      - name: Install Black
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: grep -E 'black==' tests/requirements-dev.txt | xargs pip install
+      - name: Lint
+        run: |
+          black --diff --fast .
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10"]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+        cache: pip
+        cache-dependency-path: tests/requirements-dev.txt
+    - name: Install dependencies
+      run: python -m pip install -r tests/requirements-dev.txt .
+    - name: Test with pytest
+      timeout-minutes: 20
+      run: |
+        pytest --durations=5 -v
+{% endraw %}
