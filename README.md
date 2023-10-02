@@ -8,6 +8,8 @@
 - Write a readme file using OpenAI
 - todo: write code in the files
 
+**Example Projects**
+ - [auto-concordance](https://github.com/brycedrennan/auto-concordance/tree/49eb032b5d026eb0fa580d186d281ce8a813a756) - Automatically generate concordences for books.
 
 ## Getting started
 Requirements:
