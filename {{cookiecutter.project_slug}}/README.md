@@ -12,7 +12,9 @@
 pip install {{ cookiecutter.project_slug }}
 ```
 {{ cookiecutter.example_usage }}
+
 ## Project Structure
+
 {{ cookiecutter.project_structure }}
 
 ## Changelog

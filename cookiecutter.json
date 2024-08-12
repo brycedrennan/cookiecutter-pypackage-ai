@@ -1,7 +1,7 @@
 {
   "project_name": "",
-  "project_short_description": "",
-  "full_name": "",
+  "detailed_project_description": "",
+  "full_name": "ai-coder",
   "github_username": "",
   "__project_slug": "{{ cookiecutter.project_name | slugify }}",
   "__python_module_name": "{{ cookiecutter.__project_slug | replace('-', '_') }}",
@@ -13,12 +13,16 @@
   "__tagline": "",
   "_extensions": ["context_hook.ContextModifyExtension"],
   "__prompts__": {
+    "project_short_description": "Write a single sentence description of the software project.  Do not use the name of the project in the description.",
     "tagline": "Write a clever and witty tagline for the software project. Do not use the name of the project in the tagline.  Make it no more than six words.",
     "emoji_tagline": "Represent the tagline, using only emoji. Ideally no more than 3 emoji",
-    "features": "List the features of the software project.  Do not use the name of the project in the features.  Make it no more than 6 features. ",
-    "software_type": "Select the type of interface that this project will have.  Example: 'CLI, GUI, REST API, Web App, python package'",
-    "project_structure": "Create a bullet point markdown list of the code files found in this project and what they do.  Example: '- `validators.py`: Contains the validation functions.'",
-    "python_packages": "Make a guess as to what two python packages this software would use. Make your response a comma-separated list.  Example: 'requests, fastapi, openai'",
-    "example_usage": "Write a short example of how to use the software project. Don't include installation steps. Make it a single code example"
+    "features": "List the features of the software project.  Do not use the name of the project in the features.  Make it no more than 3 features. ",
+    "software_type": "Make a guess as to the type of interface that this project will have.  Options: 'CLI, GUI, REST API, Web App, python package'. Provide NO EXPLANATION. ONLY GIVE YOUR GUESS",
+    "primary_api": "Describe the single most important API endpoint or function of the software project.  Do not use the name of the project in the description.",
+    "example_usage": "Write a short, simple, straightforward example of how to use the software project. Use functional programming. Don't include installation steps. Make it a single code example. If its a web api, give an example of calling the api. If its a cli, give an example of how to use the cli. If its a python package, give an example of how to use the package.",
+    "psuedocode": "Write a short python psuedocode snippet to demonstrate the core logic or algorithm of the project. Focus on the key steps and logic flow, without details. Do not include variable or function names that include the project name.",
+    "project_structure": "Based on the example usage, create a bullet point markdown list of the python files found in the `python_module_name`.  Example: '- `{code-folder-name}/filename.py`'",
+    "test_structure": "Based on the example usage and project structure, create a bullet point markdown list of the unit test files found in this project.  Example: '- `tests/test_filename.py`'",
+    "python_packages": "Based on the generated code,list the third-party packages need to be installed from PyPI. Make your response a comma-separated list. Only list widely-used packages. DO NOT list standard included python modules.  Example: 'requests, fastapi, openai'"
   }
 }

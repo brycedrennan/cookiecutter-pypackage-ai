@@ -1,8 +1,0 @@
-black
-coverage
-mypy
-pytest
-pytest-randomly
-pytest-sugar
-ruff
-wheel
