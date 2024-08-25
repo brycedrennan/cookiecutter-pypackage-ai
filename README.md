@@ -2,6 +2,8 @@
 
 **AI-powered cookiecutter template for python projects**
 
+<img src="https://github.com/user-attachments/assets/196a3d47-29fe-4918-bd7c-450939f62ede" width="512">
+
 ## Features
 
 - Uses latest tooling (ruff, uv, pyproject.toml, pytest)
