@@ -108,3 +108,5 @@ ENV/
 *.kgrind
 *.pyprof
 .ruff_cache
+
+project_context.json
