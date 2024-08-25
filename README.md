@@ -23,3 +23,5 @@ cookiecutter gh:brycedrennan/cookiecutter-pypackage-ai
 # or without interactive inputs
 cookiecutter --no-input gh:brycedrennan/cookiecutter-pypackage-ai/cookiecutter-pypackage-ai project_name="password generator" detailed_project_description="library that generates various kinds of passwords"
 ```
+## Author
+[@bryced8](https://x.com/bryced8)
