@@ -1,4 +1,4 @@
-# CookieCutter AI PyPackage  🐍✨️
+# CookieCutter PyPackage AI  🐍✨️
 
 **AI-powered cookiecutter template for python projects**
 
@@ -15,7 +15,7 @@ Requirements:
 pip install cookiecutter anthropic
 export ANTHROPIC_API_KEY=<your-api-key>
 # interactive inputs
-cookiecutter gh:brycedrennan/cc-python-pkg
+cookiecutter gh:brycedrennan/cookiecutter-pypackage-ai
 # or without interactive inputs
-cookiecutter --no-input ~/projects/cc-python-pkg project_name="password generator" detailed_project_description="library that generates various kinds of passwords"
+cookiecutter --no-input gh:brycedrennan/cookiecutter-pypackage-ai/cookiecutter-pypackage-ai project_name="password generator" detailed_project_description="library that generates various kinds of passwords"
 ```
