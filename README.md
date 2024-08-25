@@ -8,6 +8,10 @@
 - Automatically generates project structure and makes a first attempt at coding the project
 - Follows best practices
 
+## Example Generated Project
+These projects are uploaded without any fixes so you can accurately judge how well the code generator works.
+- [Password Generator](https://github.com/brycedrennan/generated-password-generator)
+
 ## Getting started
 Requirements:
 - pyenv installed
