@@ -1,0 +1,67 @@
+[build-system]
+requires = ["setuptools>=45", "setuptools_scm[toml]>=6.2"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["{{cookiecutter.python_module_name}}"]
+
+[project]
+name = "{{cookiecutter.project_slug}}"
+authors = [
+    {name = "{{cookiecutter.full_name}}"},
+]
+description = "{{cookiecutter.project_short_description}}"
+readme = "README.md"
+requires-python = ">=3.10"
+dynamic = ["version"]
+dependencies = [
+    {%- for package in cookiecutter.python_package_list %}
+    "{{package}}",
+    {%- endfor %}
+]
+
+[project.optional-dependencies]
+dev = [
+    "coverage",
+    "mypy",
+    "pytest",
+    "pytest-randomly",
+    "pytest-sugar",
+    "ruff",
+    "wheel",
+]
+
+[project.urls]
+Documentation = "{{cookiecutter.github_url}}"
+Source = "{{cookiecutter.github_url}}"
+
+[tool.setuptools_scm]
+write_to = "{{cookiecutter.python_module_name}}/_version.py"
+
+[tool.mypy]
+ignore_missing_imports = true
+
+[tool.ruff]
+extend-exclude = []
+line-length = 120
+output-format = "concise"
+
+[tool.ruff.lint]
+extend-ignore = [
+    "E501", "G004", "ISC001",  "PT005", "PT011", "RET504", "SIM114", "TRY003", "TRY400", "TRY401", "RUF012", "RUF100"
+]
+extend-select = [
+    "I", "E", "W", "UP", "ASYNC", "BLE", "A001", "A002",
+    "C4", "DTZ", "T10", "EM", "ISC", "ICN", "G", "PIE", "PT",
+    "Q", "SIM", "TID", "TCH", "PLC", "PLE", "TRY", "RUF"
+]
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+
+[tool.ruff.lint.flake8-errmsg]
+max-string-length = 50
+
+[tool.pytest.ini_options]
+addopts = "-s --tb=native -v --durations=10"
+norecursedirs = ["build", "dist"]

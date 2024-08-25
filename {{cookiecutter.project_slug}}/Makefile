@@ -7,6 +7,7 @@ pyenv_virt_instructions=https://github.com/pyenv/pyenv-virtualenv#pyenv-virtuale
 
 
 init: require_pyenv  ## Setup a dev environment for local development.
+	@pwd
 	@pyenv install $(python_version) -s
 	@echo -e "\033[0;32m ✔️  🐍 $(python_version) installed \033[0m"
 	@if ! [ -d "$$(pyenv root)/versions/$(venv_name)" ]; then\
@@ -14,44 +15,53 @@ init: require_pyenv  ## Setup a dev environment for local development.
 	fi;
 	@pyenv local $(venv_name)
 	@echo -e "\033[0;32m ✔️  🐍 $(venv_name) virtualenv activated \033[0m"
-	pip install --upgrade pip pip-tools
-	@if [ ! -f "tests/requirements-dev.txt" ]; then \
+	@export PYENV_VERSION=$(venv_name); \
+	export VIRTUAL_ENV=$$(pyenv prefix); \
+	if uv --help >/dev/null 2>&1; then \
+		uv pip install --upgrade uv; \
+	else \
+		pip install uv; \
+	fi; \
+	echo -e "\033[0;32m ✔️  uv installed \033[0m"; \
+	if [ ! -f "tests/requirements-dev.txt" ]; then \
 		make requirements; \
-	fi
-	pip-sync tests/requirements-dev.txt
-	pip install -e . --no-deps
-	rm -rf *.egg-info
-	@echo -e "\nEnvironment setup! ✨ 🍰 ✨ 🐍 \n\nCopy this path to tell PyCharm where your virtualenv is. You may have to click the refresh button in the pycharm file explorer.\n"
-	@echo -e "\033[0;32m"
-	@pyenv which python
-	@echo -e "\n\033[0m"
-	@echo -e "The following commands are available to run in the Makefile\n"
-	@make -s help
+	fi; \
+	uv pip sync tests/requirements-dev.txt; \
+	uv pip install -e . --no-deps; \
+	rm -rf *.egg-info; \
+	echo -e "\nEnvironment setup! ✨ 🍰 ✨ 🐍 \n\nCopy this path to tell PyCharm where your virtualenv is. You may have to click the refresh button in the pycharm file explorer.\n"; \
+	echo -e "\033[0;32m"; \
+	pyenv which python; \
+	echo -e "\n\033[0m"; \
+	echo -e "The following commands are available to run in the Makefile\n"; \
+	make -s help
 
 af: autoformat  ## Alias for `autoformat`
 autoformat:  ## Run the autoformatter.
-	@-ruff check --config tests/ruff.toml . --fix-only
-	@black .
+	@-ruff check . --fix-only
+	@ruff format .
+
+autoformat-unsafe:  ## Run the autoformatter without --fix-only.
+	@-ruff check . --fix-only --unsafe-fixes
+	@ruff format .
 
 test:  ## Run the tests.
 	@pytest
 	@echo -e "The tests pass! ✨ 🍰 ✨"
 
 lint:  ## Run the code linter.
-	@ruff check --config tests/ruff.toml .
+	@ruff check .
 	@echo -e "No linting errors - well done! ✨ 🍰 ✨"
 
 type-check: ## Run the type checker.
-	@mypy --config-file tests/mypy.ini .
+	@mypy .
 
 deploy:  ## Deploy the package to pypi.org
-	pip install twine wheel
-	-git tag $$(python setup.py -V)
+	pip install twine build
+	-git tag $$(python -m setuptools_scm)
 	git push --tags
 	rm -rf dist
-	python setup.py bdist_wheel
-	python setup.py bdist_wheel --plat-name=win-amd64
-	#python setup.py sdist
+	python -m build
 	@echo 'pypi.org Username: '
 	@read username && twine upload --verbose dist/* -u $$username;
 	rm -rf build
@@ -59,7 +69,21 @@ deploy:  ## Deploy the package to pypi.org
 	@echo "Deploy successful! ✨ 🍰 ✨"
 
 requirements:  ## Freeze the requirements.txt file
-	pip-compile setup.py tests/requirements-dev.in --output-file=tests/requirements-dev.txt --upgrade --resolver=backtracking
+	@if ! [ -z "$(VIRTUAL_ENV)" ]; then \
+		export VIRTUAL_ENV=$$(pyenv prefix); \
+	fi; \
+	if ! grep -q '^\[build-system\]' pyproject.toml; then \
+		echo "No [build-system] section found. Assuming application project. Generating requirements.txt"; \
+		uv pip compile pyproject.toml --output-file=requirements.txt || exit 1; \
+		echo "Generating tests/requirements-dev.txt"; \
+		uv pip compile pyproject.toml --extra dev --output-file=tests/requirements-dev.txt \
+			--constraint requirements.txt || exit 1; \
+	else \
+		echo "[build-system] section found. Assuming library project."; \
+		echo "Generating tests/requirements-dev.txt"; \
+		uv pip compile pyproject.toml --extra dev --output-file=tests/requirements-dev.txt || exit 1; \
+	fi
+
 
 require_pyenv:
 	@if ! [ -x "$$(command -v pyenv)" ]; then\

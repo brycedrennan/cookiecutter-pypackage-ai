@@ -1,25 +1,21 @@
-# CookieCutter with AI 🐍✨️
+# CookieCutter AI PyPackage  🐍✨️
 
-**ai-powered cookiecutter template for python packages**
+**AI-powered cookiecutter template for python projects**
 
 ## Features
 
-- Quickly generates a python package project using cookiecutter.
-- Write a readme file using OpenAI
-- todo: write code in the files
-
-**Example Projects**
- - [auto-concordance](https://github.com/brycedrennan/auto-concordance/tree/49eb032b5d026eb0fa580d186d281ce8a813a756) - Automatically generate concordences for books.
+- Uses latest tooling (ruff, uv, pyproject.toml, pytest)
+- Automatically generates project structure and makes a first attempt at coding the project
+- Follows best practices
 
 ## Getting started
 Requirements:
-- install pyenv
+- pyenv installed
 ```bash
-pip install cookiecutter openai
-export OPENAI_API_KEY=<your-api-key>
-```
-Usage
-
-```bash
+pip install cookiecutter anthropic
+export ANTHROPIC_API_KEY=<your-api-key>
+# interactive inputs
 cookiecutter gh:brycedrennan/cc-python-pkg
+# or without interactive inputs
+cookiecutter --no-input ~/projects/cc-python-pkg project_name="password generator" detailed_project_description="library that generates various kinds of passwords"
 ```
